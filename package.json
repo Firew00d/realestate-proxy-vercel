@@ -1,0 +1,6 @@
+{
+  "name": "realestate-proxy-vercel",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Anthropic + 국토부 실거래가 API 프록시 (Vercel Serverless Functions)"
+}
