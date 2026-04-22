@@ -6,14 +6,17 @@
  * - 미국 iad1 리전에서 실행되어 Anthropic의 지역 차단 회피
  * - POST 요청만 허용, 요청 body를 그대로 Anthropic에 전달
  *
- * Node.js Runtime 사용 이유:
+ * Node.js Runtime 사용 (Vercel 기본값):
  * - Edge Runtime은 maxDuration 설정이 제한적이라 타임아웃 가능
  * - 종합 분석 요청은 이미지 여러 장 + 긴 응답으로 15~30초 소요
- * - Node.js Runtime은 vercel.json의 maxDuration: 30이 정상 작동
+ * - Node.js Runtime은 maxDuration: 30이 정상 작동
+ * - runtime 필드 생략 시 Vercel이 최신 LTS Node 버전 자동 선택
  */
 
+// Vercel 허용 runtime 값: 'edge' 또는 'nodejs' (버전 명시 안 함)
+// Node.js 버전은 Vercel 프로젝트 설정에서 별도 지정
 export const config = {
-  runtime: 'nodejs20.x',
+  runtime: 'nodejs',
   regions: ['iad1'],
   maxDuration: 30,
 };
