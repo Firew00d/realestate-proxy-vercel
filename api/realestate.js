@@ -60,7 +60,7 @@ export default async function handler(request) {
   const area          = areaStr ? parseFloat(areaStr) : null;
   // 면적 필터 허용 오차 (기본 ±10%, 쿼리로 조절 가능)
   const areaTolStr    = url.searchParams.get('areaTolerance');
-  const areaTolerance = areaTolStr ? Math.max(0.01, Math.min(1.0, parseFloat(areaTolStr))) : 0.10;
+  const areaTolerance = areaTolStr ? Math.max(0.01, Math.min(1.0, parseFloat(areaTolStr))) : 0.07;
 
   // 입력 검증
   if (!/^\d{5}$/.test(sigunguCode || '')) {
