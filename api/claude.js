@@ -15,10 +15,11 @@
 
 // Vercel 허용 runtime 값: 'edge' 또는 'nodejs' (버전 명시 안 함)
 // Node.js 버전은 Vercel 프로젝트 설정에서 별도 지정
+// maxDuration은 Hobby 플랜에선 60초까지 무료, 그 이상은 Pro 필요
 export const config = {
   runtime: 'nodejs',
   regions: ['iad1'],
-  maxDuration: 30,
+  maxDuration: 60,
 };
 
 // req body를 raw 스트림으로 읽어 크기 제한 우회 (이미지 업로드 대응)
