@@ -58,6 +58,9 @@ export default async function handler(request) {
   const buildingName  = (url.searchParams.get('buildingName') || '').trim();
   const areaStr       = url.searchParams.get('area');
   const area          = areaStr ? parseFloat(areaStr) : null;
+  // 면적 필터 허용 오차 (기본 ±10%, 쿼리로 조절 가능)
+  const areaTolStr    = url.searchParams.get('areaTolerance');
+  const areaTolerance = areaTolStr ? Math.max(0.01, Math.min(1.0, parseFloat(areaTolStr))) : 0.10;
 
   // 입력 검증
   if (!/^\d{5}$/.test(sigunguCode || '')) {
@@ -104,7 +107,8 @@ export default async function handler(request) {
     filtered = filtered.filter(t => (t.name || '').replace(/\s+/g, '').toLowerCase().includes(kw));
   }
   if (area && !isNaN(area)) {
-    const lo = area * 0.8, hi = area * 1.2;
+    const lo = area * (1 - areaTolerance);
+    const hi = area * (1 + areaTolerance);
     filtered = filtered.filter(t => t.area && t.area >= lo && t.area <= hi);
   }
 
@@ -120,8 +124,10 @@ export default async function handler(request) {
     filteredCount: filtered.length,
     apiErrors: errorsCount,
     usedFilter: filtered.length > 0 && (buildingName || area),
+    areaTolerance,      // 실제 적용된 허용 오차 (HTML에서 참조)
     ...stats,
-    transactions: (filtered.length > 0 ? filtered : normalized).slice(0, 20)
+    // 클라이언트(HTML)에서 이상치 제거·클러스터링하려면 충분한 표본이 필요함
+    transactions: (filtered.length > 0 ? filtered : normalized).slice(0, 200)
       .map(({ _sortKey, ...rest }) => rest),
     source: '국토교통부 공공데이터포털',
   });
