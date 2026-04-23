@@ -205,7 +205,8 @@ function normalizeItem(item, buildingType, tradeType) {
   const day   = (item.dealDay   || '').padStart(2, '0');
   if (!year || !month) return null;
 
-  const date = `${year}-${month}`;
+  // 전체 날짜 (일자까지 포함) — 주차별 집계에 필요
+  const date = (day && day !== '00') ? `${year}-${month}-${day}` : `${year}-${month}`;
   const sortKey = `${year}${month}${day}`;
 
   let name = '';
@@ -228,7 +229,10 @@ function normalizeItem(item, buildingType, tradeType) {
   };
 
   const base = {
-    date,
+    date,                                                  // "2026-03-15"
+    year: parseInt(year, 10),
+    month: parseInt(month, 10),
+    day: day && day !== '00' ? parseInt(day, 10) : null,   // 일자 (주차 계산용)
     type: tradeType,
     name: name || '(미상)',
     area,
